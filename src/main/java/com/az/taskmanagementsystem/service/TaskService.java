@@ -15,7 +15,11 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public Task createTask(Task task) {
-        return taskRepository.save(task);
+        if (!isValidStatus(task.getStatus())) {
+            throw new IllegalArgumentException("Invalid status");
+        }else {
+            return taskRepository.save(task);
+        }
     }
 
     public Optional<Task> getTaskById(Integer id) {
@@ -38,5 +42,8 @@ public class TaskService {
         } else {
             throw new NotFoundException("Task not found with ID: " + id);
         }
+    }
+    private boolean isValidStatus(String status) {
+        return status.equals("in progress") || status.equals("ready for test") || status.equals("done");
     }
 }

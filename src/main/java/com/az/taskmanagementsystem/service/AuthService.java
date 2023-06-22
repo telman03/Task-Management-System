@@ -4,6 +4,9 @@ import com.az.taskmanagementsystem.dto.AuthRequest;
 import com.az.taskmanagementsystem.dto.AuthResponse;
 import com.az.taskmanagementsystem.dto.RegisterRequest;
 import com.az.taskmanagementsystem.dto.RegisterResponse;
+import com.az.taskmanagementsystem.exception.AuthenticationException;
+import com.az.taskmanagementsystem.exception.NotFoundException;
+import com.az.taskmanagementsystem.exception.TokenRefreshException;
 import com.az.taskmanagementsystem.model.Token;
 import com.az.taskmanagementsystem.model.enums.TokenType;
 import com.az.taskmanagementsystem.repository.TokenRepository;
@@ -53,14 +56,18 @@ public class AuthService {
     }
 
     public AuthResponse authenticate(AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        } catch (AuthenticationException ex) {
+            throw new AuthenticationException("Authentication failed: " + ex.getMessage());
+        }
         var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + request.getEmail()));
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -107,7 +114,7 @@ public class AuthService {
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
             var user = this.repository.findByEmail(userEmail)
-                    .orElseThrow();
+                    .orElseThrow(() -> new NotFoundException("User not found with email: " + userEmail));
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -117,6 +124,8 @@ public class AuthService {
                         .refreshToken(refreshToken)
                         .build();
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+            } else {
+                throw new TokenRefreshException("Invalid refresh token");
             }
         }
     }
