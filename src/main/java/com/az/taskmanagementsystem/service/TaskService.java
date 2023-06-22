@@ -6,6 +6,7 @@ import com.az.taskmanagementsystem.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,5 +46,9 @@ public class TaskService {
     }
     private boolean isValidStatus(String status) {
         return status.equals("in progress") || status.equals("ready for test") || status.equals("done");
+    }
+
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
     }
 }
