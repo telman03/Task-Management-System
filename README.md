@@ -20,4 +20,4 @@ run this command in the command line:
 mvn spring-boot:run
 ```
 <br></br>
-Then head out to [Postman Collection](https://api.postman.com/collections/18441402-cbb2b4b5-ed5a-4a8f-858c-e36b6af0fdd5?access_key=PMAT-01H3HWQ98WX69DF8FX0093B2WF) to test
+Then head out to [Postman Collection](https://elements.getpostman.com/redirect?entityId=18441402-cbb2b4b5-ed5a-4a8f-858c-e36b6af0fdd5&entityType=collection) to test
