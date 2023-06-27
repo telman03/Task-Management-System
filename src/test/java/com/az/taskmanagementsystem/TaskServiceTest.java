@@ -70,7 +70,6 @@ public class TaskServiceTest {
 
     @Test
     public void testGetTaskById_ExistingId_ReturnsTask() {
-        // Create a sample task
         Task task = new Task();
         task.setId(1);
         task.setTitle("Sample Task");

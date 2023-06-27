@@ -1,5 +1,6 @@
 package com.az.taskmanagementsystem.model;
 
+import com.az.taskmanagementsystem.model.enums.TaskStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -31,8 +32,5 @@ public class Task {
     private LocalDate dueDate;
 
 
-    @NotBlank(message = "Status is required")
-    @Size(max = 20, message = "Status can have a maximum of 20 characters")
-    @Pattern(regexp = "^(in progress|ready for test|done)$", message = "Invalid status")
-    private String status;
+    private TaskStatus status;
 }

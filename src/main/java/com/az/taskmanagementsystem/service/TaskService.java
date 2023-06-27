@@ -2,6 +2,7 @@ package com.az.taskmanagementsystem.service;
 
 import com.az.taskmanagementsystem.exception.NotFoundException;
 import com.az.taskmanagementsystem.model.Task;
+import com.az.taskmanagementsystem.model.enums.TaskStatus;
 import com.az.taskmanagementsystem.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public Task createTask(Task task) {
-        if (!isValidStatus(task.getStatus())) {
-            throw new IllegalArgumentException("Invalid status");
+        TaskStatus status = task.getStatus();
+        if (status != TaskStatus.in_progress && status != TaskStatus.ready_for_test && status != TaskStatus.done) {
+            throw new IllegalArgumentException("Invalid task status. Allowed values are: in_progress, ready_for_test, done");
         }else {
             return taskRepository.save(task);
         }
+
     }
 
     public Optional<Task> getTaskById(Integer id) {
@@ -50,5 +53,8 @@ public class TaskService {
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
+    }
+    public List<Task> searchTasks(String keyword) {
+        return taskRepository.searchByKeyword(keyword);
     }
 }

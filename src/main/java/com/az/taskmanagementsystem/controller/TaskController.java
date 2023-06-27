@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -38,6 +39,12 @@ public class TaskController {
     public ResponseEntity<Void> deleteTask(@PathVariable("id") Integer id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<Task>> searchTasks(@PathVariable String keyword) {
+        List<Task> foundTasks = taskService.searchTasks(keyword);
+        return ResponseEntity.ok(foundTasks);
     }
 }
 
