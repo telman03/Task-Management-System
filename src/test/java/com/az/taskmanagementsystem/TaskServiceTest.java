@@ -2,6 +2,7 @@ package com.az.taskmanagementsystem;
 
 import com.az.taskmanagementsystem.exception.NotFoundException;
 import com.az.taskmanagementsystem.model.Task;
+import com.az.taskmanagementsystem.model.enums.TaskStatus;
 import com.az.taskmanagementsystem.repository.TaskRepository;
 import com.az.taskmanagementsystem.service.TaskService;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ public class TaskServiceTest {
         task.setTitle("Sample Task");
         task.setDescription("Task description");
         task.setDueDate(LocalDate.now());
-        task.setStatus("in progress");
+        task.setStatus(TaskStatus.valueOf("in_progress"));
 
         when(taskRepository.save(task)).thenReturn(task);
 
